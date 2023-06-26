@@ -35,9 +35,13 @@ class ReplyReceived extends Notification
     }
 
     public function toApn(object $notifiable) {
-        return ApnMessage::create()
-            ->title("$this->sender replied to you")
-            ->body($this->content)
-            ->sound("default");
+        try {
+            return ApnMessage::create()
+                ->title("$this->sender replied to you")
+                ->body($this->content)
+                ->sound("default");
+        } catch(\Exception $e) {
+            error_log($e);
+        }
     }
 }

@@ -40,7 +40,7 @@ class runchecks extends Command
                 continue;
             }
 
-            error_log("found one.");
+            print_r("found one." . time());
             $account->setChecked();
 
             $lemmy->setup($account->username, $account->instance, $account->auth_token);
