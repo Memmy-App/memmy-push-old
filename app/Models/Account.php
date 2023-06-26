@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -15,6 +16,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property int $last_mention_id
  * @property int $last_message_id
  * @property string $authToken
+ * @property string $last_checked
  */
 class Account extends Model
 {
@@ -27,6 +29,7 @@ class Account extends Model
         "last_reply_id",
         "last_update_id",
         "last_mention_id",
+        "last_checked",
     ];
 
     public function setLastReplyId(int $id): void {
@@ -50,5 +53,11 @@ class Account extends Model
     public function pushTokens(): HasMany
     {
         return $this->hasMany(PushToken::class);
+    }
+
+    public function setChecked(): void {
+        $this->update([
+            "last_checked" => Carbon::now()
+        ]);
     }
 }
