@@ -28,14 +28,17 @@ class LemmyHelper
     public function authenticate(): bool {
         $data = [
             "auth" => $this->authToken,
-            "username" => "$this->username@$this->instance",
         ];
 
-        $response = Http::withHeaders($this->headers)->acceptJson()->get("$this->baseUrl/user/mention", $data);
-
-        error_log(json_encode($response));
+        $response = Http::withHeaders($this->headers)->acceptJson()->get("$this->baseUrl/site", $data);
 
         if($response->status() !== 200) {
+            return false;
+        }
+
+        $json = $response->json();
+
+        if($json["my_user"]["person"]["name"] != $this->username) {
             return false;
         }
 
