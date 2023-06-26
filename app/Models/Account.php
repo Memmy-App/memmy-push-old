@@ -11,6 +11,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property int $id
  * @property string $username
  * @property string $instance
+ * @property int $last_reply_id
+ * @property int $last_mention_id
+ * @property int $last_message_id
  * @property string $authToken
  */
 class Account extends Model
@@ -22,6 +25,24 @@ class Account extends Model
         "instance",
         "auth_token"
     ];
+
+    public function setLastReplyId(int $id): void {
+        $this->update([
+            "last_reply_id" => $id,
+        ]);
+    }
+
+    public function setLastMentionId(int $id): void {
+        $this->update([
+            "last_mention_id" => $id,
+        ]);
+    }
+
+    public function setLastMessageId(int $id): void {
+        $this->update([
+            "last_message_id" => $id,
+        ]);
+    }
 
     public function pushTokens(): HasMany
     {
