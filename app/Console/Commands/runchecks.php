@@ -33,9 +33,11 @@ class runchecks extends Command
 
             if(!$account) {
                 sleep(1);
+                error_log("continuing.");
                 continue;
             }
 
+            error_log("found one.");
             $account->setChecked();
 
             $lemmy->setup($account->username, $account->instance, $account->auth_token);
