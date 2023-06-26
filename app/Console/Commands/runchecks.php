@@ -6,6 +6,7 @@ use App\Lemmy\LemmyHelper;
 use App\Models\Account;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Notification;
 
 class runchecks extends Command
 {
@@ -52,6 +53,12 @@ class runchecks extends Command
                 $account->setLastReplyId($lastReply["id"]);
 
                 error_log($lastReply["content"]);
+
+                $tokens = $account->pushTokens()->get();
+
+                foreach($tokens as $token) {
+                    Notification::route("apn", $token->push_token)->notifyNow($lastReply);
+                }
             }
 
             usleep(1);
