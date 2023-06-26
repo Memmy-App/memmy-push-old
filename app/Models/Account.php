@@ -23,7 +23,10 @@ class Account extends Model
     protected $fillable = [
         "username",
         "instance",
-        "auth_token"
+        "auth_token",
+        "last_reply_id",
+        "last_update_id",
+        "last_mention_id",
     ];
 
     public function setLastReplyId(int $id): void {

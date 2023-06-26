@@ -26,12 +26,12 @@ class LemmyHelper
     }
 
     public function authenticate(): bool {
-        $this->data = [
+        $data = [
             "auth" => $this->authToken,
             "username" => "$this->username@$this->instance",
         ];
 
-        $response = Http::withHeaders($this->headers)->acceptJson()->get("$this->baseUrl/user/mention", $this->data);
+        $response = Http::withHeaders($this->headers)->acceptJson()->get("$this->baseUrl/user/mention", $data);
 
         error_log(json_encode($response));
 
@@ -40,5 +40,29 @@ class LemmyHelper
         }
 
         return true;
+    }
+
+    public function getLastReply(): bool|array {
+        $data = [
+            "auth" => $this->authToken,
+            "limit" => 1,
+            "unread_only" => "true",
+        ];
+
+        try {
+
+            $response = Http::withHeaders($this->headers)->acceptJson()->timeout(7)->get("$this->baseUrl/user/replies", $data)->json();
+
+            if (!$response || !$response["replies"] || !$response["replies"][0]) return false;
+
+            return [
+                "id" => $response["replies"][0]["comment_reply"]["id"],
+                "user" => $response["replies"][0]["creator"]["name"],
+                "content" => $response["replies"][0]["comment"]["content"],
+            ];
+        } catch(\Exception $e) {
+            error_log($e);
+            return false;
+        }
     }
 }
