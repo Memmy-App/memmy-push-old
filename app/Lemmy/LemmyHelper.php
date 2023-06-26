@@ -38,7 +38,7 @@ class LemmyHelper
 
         $json = $response->json();
 
-        if($json["my_user"]["person"]["name"] != $this->username) {
+        if($json["my_user"]["local_user_view"]["person"]["name"] != $this->username) {
             return false;
         }
 
