@@ -4,9 +4,12 @@ namespace App\Console\Commands;
 
 use App\Lemmy\LemmyHelper;
 use App\Models\Account;
+use App\Notifications\ReplyReceived;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Notification;
+use NotificationChannels\Apn\ApnChannel;
+use NotificationChannels\Apn\ApnMessage;
 
 class runchecks extends Command
 {
@@ -34,7 +37,6 @@ class runchecks extends Command
 
             if(!$account) {
                 sleep(1);
-                error_log("continuing.");
                 continue;
             }
 
@@ -43,7 +45,7 @@ class runchecks extends Command
 
             $lemmy->setup($account->username, $account->instance, $account->auth_token);
 
-            $lastReply = $lemmy->getLastReply($account->last_reply_id);
+            $lastReply = $lemmy->getLastReply();
 
             if(!$lastReply) {
                 continue;
@@ -54,11 +56,7 @@ class runchecks extends Command
 
                 error_log($lastReply["content"]);
 
-                $tokens = $account->pushTokens()->get();
-
-                foreach($tokens as $token) {
-                    Notification::route("apn", $token->push_token)->notifyNow($lastReply);
-                }
+                $account->notify(new ReplyReceived($lastReply));
             }
 
             usleep(1);

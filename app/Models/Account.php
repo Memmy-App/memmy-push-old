@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Notifications\Notifiable;
 
 /**
  * @package App\Models
@@ -20,7 +21,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  */
 class Account extends Model
 {
-    use HasFactory;
+    use HasFactory, Notifiable;
 
     protected $fillable = [
         "username",
@@ -53,6 +54,11 @@ class Account extends Model
     public function pushTokens(): HasMany
     {
         return $this->hasMany(PushToken::class);
+    }
+
+    public function routeNotificationForApn()
+    {
+        return $this->pushTokens()->pluck("push_token")->toArray();
     }
 
     public function setChecked(): void {
