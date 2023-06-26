@@ -80,7 +80,7 @@ class PushController extends Controller {
             $account = Account::create([
                 "username" => $request->input("username"),
                 "instance" => $request->input("instance"),
-                "authToken" => $request->input("authToken")
+                "auth_token" => $request->input("authToken")
             ]);
         }
 
@@ -88,7 +88,7 @@ class PushController extends Controller {
 
         if(!$token) {
             $account->pushTokens()->create([
-                "push_token" => $request->input("push_token")
+                "push_token" => $request->input("pushToken")
             ]);
         }
 

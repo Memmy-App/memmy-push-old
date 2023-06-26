@@ -16,5 +16,5 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::post("/push/status", [PushController::class, "getStatus"]);
-Route::post("/push/enable", [PushController::class, "enabled"]);
+Route::post("/push/enable", [PushController::class, "enable"]);
 Route::post("/push/disable", [PushController::class, "disable"]);

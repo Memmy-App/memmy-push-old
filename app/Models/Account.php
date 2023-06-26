@@ -20,7 +20,7 @@ class Account extends Model
     protected $fillable = [
         "username",
         "instance",
-        "authToken"
+        "auth_token"
     ];
 
     public function pushTokens(): HasMany
