@@ -8,12 +8,12 @@ class LemmyHelper
 {
     private string $username;
     private string $instance;
-    private string $authToken;
+    private string|null $authToken;
 
     private array $headers;
     private string $baseUrl;
 
-    public function setup(string $username, string $instance, string $authToken): void {
+    public function setup(string $username, string $instance, ?string $authToken = null): void {
         $this->username = $username;
         $this->instance = $instance;
         $this->authToken = $authToken;
@@ -63,6 +63,21 @@ class LemmyHelper
                 "user" => $response["replies"][0]["creator"]["name"],
                 "content" => $response["replies"][0]["comment"]["content"],
             ];
+        } catch(\Exception $e) {
+            error_log($e);
+            return false;
+        }
+    }
+
+    public function getSiteInfo(): array|bool {
+        $data = [];
+
+        try {
+            $response = Http::acceptJson()->timeout(7)->get("$this->baseUrl/site")->json();
+
+            if(!$response) return false;
+
+            return $response;
         } catch(\Exception $e) {
             error_log($e);
             return false;
